@@ -2,7 +2,7 @@ FROM odoo:18.0
 
 USER root
 
-COPY --chown=user:group ./requirements.txt /tmp/
+COPY --chown=odoo:odoo ./requirements.txt /tmp/
 
 RUN apt-get update \
     && apt-get install -y git gcc swig python3-m2crypto unzip curl python3-venv \
