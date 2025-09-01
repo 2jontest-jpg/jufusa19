@@ -13,4 +13,10 @@ RUN apt-get update \
 RUN pip install setuptools==69.0.3 wheel --break-system-packages
 RUN pip install -r /tmp/requirements.txt --break-system-packages
 
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 USER odoo
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["odoo"]
