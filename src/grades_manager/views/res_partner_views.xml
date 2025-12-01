@@ -1,0 +1,113 @@
+<odoo>
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form.ext</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <field name="category_id" position="after">
+                <field name="is_teacher" />
+            </field>
+            <!--Doble
+            slash busca en todos los elementos field -->
+            <!--/..
+            busca al elemento padre del field actual encontrado -->
+            <field name="is_teacher" position="after">
+                <field name="is_student" />
+            </field>
+            <xpath expr="//field[@name='vat']/.." position="inside">
+                <field name="is_freelance" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="teacher_list_view" model="ir.ui.view">
+        <field name="name">teacher.list.view</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <list string="Teachers">
+                <field name="name" />
+                <field name="email" />
+                <field name="phone" />
+                <field name="vat" />
+                <field name="is_teacher" />
+                <field name="is_freelance" />
+            </list>
+        </field>
+    </record>
+
+    <record id="teacher_form_view" model="ir.ui.view">
+        <field name="name">teacher.form.view</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <form string="Teacher">
+                <sheet>
+                    <group>
+                        <field name="name" required="1" />
+                        <field name="email" required="1" />
+                        <field name="phone" />
+                        <field name="vat" />
+                        <field name="is_teacher" />
+                        <field name="is_freelance" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="teachers_action" model="ir.actions.act_window">
+        <field name="name">Teachers</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_teacher','=',True)]</field>
+        <field name="context">{'default_is_teacher': True}</field>
+        <field name="view_ids"
+            eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'list', 'view_id': ref('teacher_list_view')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('teacher_form_view')})]" />
+    </record>
+
+    <record id="student_list_view" model="ir.ui.view">
+        <field name="name">student.list.view</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <list string="Teachers">
+                <field name="name" />
+                <field name="email" />
+                <field name="phone" />
+                <field name="vat" />
+                <field name="is_student" />
+            </list>
+        </field>
+    </record>
+
+    <record id="student_form_view" model="ir.ui.view">
+        <field name="name">student.form.view</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <form string="Student">
+                <sheet>
+                    <group>
+                        <field name="name" required="1" />
+                        <field name="email" required="1" />
+                        <field name="phone" />
+                        <field name="vat" />
+                        <field name="is_student" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="students_action" model="ir.actions.act_window">
+        <field name="name">Students</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_student','=',True)]</field>
+        <field name="context">{'default_is_student': True}</field>
+        <field name="view_ids"
+            eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'list', 'view_id': ref('student_list_view')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('student_form_view')})]" />
+    </record>
+</odoo>
+

@@ -1,0 +1,51 @@
+<odoo>
+    <record id="crm_lead_view_form" model="ir.ui.view">
+        <field name="name">crm.lead.form.ext</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form" />
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='email_from']/../../.." position="after">
+                <group string="Ingeniería">
+                    <group>
+                        <field name="require_engineering" />
+                    </group>
+                    <group name="project" invisible="not require_engineering">
+                        <!--<button
+                        name="action_create_project"
+                            string="Crear consulta a ingeniería"
+                            type="object"
+                            icon="fa-plus-circle"
+                        />-->
+                        <field name="project_id" readonly="1" />
+                    </group>
+                </group>
+            </xpath>
+            <!--<field
+            name="is_project" position="after">
+                <field name="project_id" string="Project" />
+            </field>-->
+            <notebook position="inside">
+                <page string="Tasks Project" name="project" invisible="not project_id">
+                    <field name="task_ids">
+                        <list editable="bottom">
+                            <field name="name" />
+                            <field name="description" />
+                            <field name="stage_id" />
+                        </list>
+                        <form>
+                            <sheet>
+                                <group>
+                                    <field name="name" />
+                                    <field name="project_id" invisible="1" />
+                                    <field name="description" />
+                                </group>
+                            </sheet>
+                        </form>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>
+

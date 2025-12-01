@@ -1,0 +1,7 @@
+name = "main"
+odoo_path = "/home/jonaodoo/dev/odoo/jufusa19/recursos/odoo"
+addons_path = ["/home/jonaodoo/dev/odoo/jufusa19/recursos/odoo/odoo/addons","/home/jonaodoo/dev/odoo/jufusa19/recursos/odoo/addons","/home/jonaodoo/dev/odoo/jufusa19/docker-odoo-dev/src"]
+python_path = "/home/jonaodoo/.odoo_lsp_venv/bin/python3"
+additional_stubs = ["/home/jonaodoo/.local/share/nvim/odoo/typeshed/stubs","/home/jonaodoo/dev/odoo/jufusa19/recursos/odoo-stubs"]
+log_level = "DEBUG"
+log_file = "/tmp/odoo_ls_debug.log"

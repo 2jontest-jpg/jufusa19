@@ -1,3 +1,7 @@
 {
-  "extraPaths": ["/path/server/odoo", "/path/server/odoo/addons", "/path/custom_addons"]
+  "extraPaths": [
+    "/home/jonaodoo/dev/odoo/jufusa19/recursos/odoo",
+    "/home/jonaodoo/dev/odoo/jufusa19/recursos/odoo/addons",
+    "/home/jonaodoo/dev/odoo/jufusa19/docker-odoo-dev/src"
+  ]
 }

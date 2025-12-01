@@ -12,12 +12,18 @@ services:
     volumes:
       - ./conf:/etc/odoo
       - odoo-web-data:/var/lib/odoo
-      - ${ODOO_SERVER}:/var/lib/odoo/odoo
-      - ${CUSTOM_ADDONS}:/var/lib/odoo/custom_addons
-    enviroment:
+      - /home/jonaodoo/dev/odoo/jufusa19/recursos/odoo:/var/lib/odoo/odoo
+      - /home/jonaodoo/dev/odoo/jufusa19/docker-odoo-dev/src:/var/lib/odoo/custom_addons
+    environment:
       - DEBUGPY=true
       - DEBUGPY_PORT=${DEBUGPY_PORT}
       - DEBUGPY_AUX_PORT=${DEBUGPY_AUX_PORT}
+      - VIRTUAL_HOST=${ODOO_VIRTUAL_HOST}
+      - DBFILTER=^.*$
+      - VIRTUAL_PORT=8069
+    networks:
+      - nginx-proxy_default
+    entrypoint: ${ENTRYPOINT}
   db:
     container_name: ${PG_CONTAINER_NAME}
     image: postgres:${PG_VERSION}
@@ -30,6 +36,11 @@ services:
       - ${PG_PORT}:5432
     volumes:
       - pgdb-data:/var/lib/postgresql/data/pgdata
+    networks:
+      - nginx-proxy_default
 volumes:
   odoo-web-data:
   pgdb-data:
+networks:
+  nginx-proxy_default:
+    external: true
