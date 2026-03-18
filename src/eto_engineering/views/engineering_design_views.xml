@@ -1,0 +1,83 @@
+<odoo>
+
+    <record id="view_engineering_bom_line_tree" model="ir.ui.view">
+        <field name="name">engineering.bom.line.tree</field>
+        <field name="model">engineering.bom.line</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="product_id"/>
+                <field name="quantity"/>
+                <field name="uom_id"/>
+                <field name="notes"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_engineering_design_form" model="ir.ui.view">
+        <field name="name">engineering.design.form</field>
+        <field name="model">engineering.design</field>
+        <field name="arch" type="xml">
+
+
+            <form>
+                <header>
+
+                    <button
+                        name="action_set_review"
+                        type="object"
+                        string="Send to Review"
+                        class="btn-secondary"/>
+
+                    <button
+                        name="action_approve_design"
+                        type="object"
+                        string="Approve"
+                        class="btn-primary"/>
+
+                    <button
+                        name="action_release_design"
+                        type="object"
+                        string="Release Engineering"
+                        class="btn-success"
+                        invisible="state != 'approved'"/>
+
+                    <field name="state" widget="statusbar"/>
+
+                </header>
+                <sheet>
+
+                    <group>
+                        <field name="name"/>
+                        <field name="sale_order_id"/>
+                        <field name="family_id"/>
+                    </group>
+
+                    <group>
+                        <field name="diameter"/>
+                        <field name="length"/>
+                        <field name="pressure_rating"/>
+                    </group>
+
+                    <notebook>
+
+                    <page string="Engineering BOM">
+                        <field name="bom_line_ids">
+                            <list editable="bottom">
+                                <field name="product_id"/>
+                                <field name="quantity"/>
+                                <field name="uom_id"/>
+                                <field name="notes"/>
+                            </list>
+                        </field>
+                    </page>
+
+                    </notebook>
+
+                </sheet>
+                <chatter/>
+            </form>
+
+        </field>
+    </record>
+
+</odoo>

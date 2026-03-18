@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_engineering_family,engineering.family,model_engineering_family,,1,1,1,1
+access_engineering_design,engineering.design,model_engineering_design,,1,1,1,1
+access_engineering_bom_line,engineering.bom.line,model_engineering_bom_line,,1,1,1,1
+access_engineering_document,engineering.document,model_engineering_document,,1,1,1,1

@@ -1,0 +1,20 @@
+<odoo>
+
+    <record id="action_engineering_design" model="ir.actions.act_window">
+        <field name="name">Engineering Designs</field>
+        <field name="res_model">engineering.design</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="menu_eto_root"
+        name="Engineering"
+        sequence="10"/>
+
+    <menuitem
+        id="menu_engineering_design"
+        name="Engineering Designs"
+        parent="menu_eto_root"
+        action="action_engineering_design"/>
+
+</odoo>
