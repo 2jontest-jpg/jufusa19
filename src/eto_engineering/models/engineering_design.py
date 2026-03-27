@@ -16,6 +16,7 @@ class EngineeringDesign(models.Model):
     )
 
     sale_order_id = fields.Many2one("sale.order", string="Sales Order", required=True)
+    production_id = fields.Many2one("mrp.production", string="Manufacturing Order")
 
     family_id = fields.Many2one(
         "engineering.family", string="Product Family", required=True
@@ -49,6 +50,30 @@ class EngineeringDesign(models.Model):
         default="draft",
     )
 
+    def action_view_sale_order(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Sales Order",
+            "res_model": "sale.order",
+            "view_mode": "form",
+            "res_id": self.sale_order_id.id,
+        }
+
+    def action_view_manufacturing_order(self):
+        self.ensure_one()
+
+        if not self.production_id:
+            raise UserError("No Manufacturing Order associated with design")
+
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Manufacturing Order",
+            "res_model": "mrp.production",
+            "view_mode": "form",
+            "res_id": self.production_id.id,
+        }
+
     def action_release_design(self):
         for rec in self:
 
@@ -75,7 +100,7 @@ class EngineeringDesign(models.Model):
             rec.state = "approved"
 
     def _create_product_from_design(self):
-        Product = self.env["product.product"]
+        ProductTemplate = self.env["product.template"]
 
         for rec in self:
             if rec.product_id:
@@ -83,14 +108,15 @@ class EngineeringDesign(models.Model):
 
             name = f'{rec.family_id.name} Ø{rec.diameter}" L{rec.length}"'
 
-            product = Product.create(
+            template = ProductTemplate.create(
                 {
                     "name": name,
-                    "type": "consu",
+                    "detailed_type": "product",
+                    "tracking": "lot",
                 }
             )
 
-            rec.product_id = product.id
+            rec.product_id = template.product_variant_id.id
 
     def _generate_bom(self):
         self.ensure_one()
@@ -137,8 +163,12 @@ class EngineeringDesign(models.Model):
                 "product_qty": 1,
                 "bom_id": bom.id,
                 "origin": self.sale_order_id.name,  # 🔥 mejor que self.name
+                "engineering_design_id": self.id,
+                "sale_order_id": self.sale_order_id.id,
             }
         )
+
+        self.production_id = production.id
 
         return production
 

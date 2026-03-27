@@ -1,0 +1,42 @@
+<odoo>
+
+    <!-- Vista lista -->
+    <record id="view_engineering_family_list" model="ir.ui.view">
+        <field name="name">engineering.family.list</field>
+        <field name="model">engineering.family</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="product_template_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista formulario -->
+    <record id="view_engineering_family_form" model="ir.ui.view">
+        <field name="name">engineering.family.form</field>
+        <field name="model">engineering.family</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="product_template_id"/>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acción -->
+    <record id="action_engineering_family" model="ir.actions.act_window">
+        <field name="name">Engineering Families</field>
+        <field name="res_model">engineering.family</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+</odoo>

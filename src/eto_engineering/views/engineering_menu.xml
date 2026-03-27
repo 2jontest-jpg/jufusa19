@@ -17,4 +17,8 @@
         parent="menu_eto_root"
         action="action_engineering_design"/>
 
+    <menuitem id="menu_engineering_family"
+              name="Families"
+              parent="menu_eto_root"
+              action="action_engineering_family"/>
 </odoo>

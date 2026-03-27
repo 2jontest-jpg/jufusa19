@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_mrp_production_form_inherit_eto" model="ir.ui.view">
+        <field name="name">mrp.production.form.inherit.eto</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+
+                <!-- Engineering -->
+                <button name="action_view_engineering_design"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil"
+                        invisible="engineering_design_id == False">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Engineering</span>
+                    </div>
+                </button>
+
+                <!-- Sale Order -->
+                <button name="action_view_sale_order"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-shopping-cart"
+                        invisible="sale_order_id == False">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Sale Order</span>
+                    </div>
+                </button>
+
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
