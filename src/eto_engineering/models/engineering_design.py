@@ -10,16 +10,21 @@ class EngineeringDesign(models.Model):
     product_id = fields.Many2one(
         "product.product", string="Generated Product", readonly=True
     )
+    lot_id = fields.Many2one("stock.lot", string="Generated Lot", readonly=True)
+    production_id = fields.Many2one("mrp.production", string="Manufacturing Order")
+    sale_order_id = fields.Many2one("sale.order", string="Sales Order", required=True)
+    family_id = fields.Many2one(
+        "engineering.family", string="Product Family", required=True
+    )
+    bom_line_ids = fields.One2many(
+        "engineering.bom.line", "design_id", string="Engineering BOM"
+    )
+    document_ids = fields.One2many(
+        "engineering.document", "design_id", string="Documents"
+    )
 
     name = fields.Char(
         string="Design Reference", required=True, copy=False, default="New"
-    )
-
-    sale_order_id = fields.Many2one("sale.order", string="Sales Order", required=True)
-    production_id = fields.Many2one("mrp.production", string="Manufacturing Order")
-
-    family_id = fields.Many2one(
-        "engineering.family", string="Product Family", required=True
     )
 
     diameter = fields.Float(string="Diameter")
@@ -80,7 +85,7 @@ class EngineeringDesign(models.Model):
             rec._validate_before_release()
 
             # 1. Crear producto dinámico
-            rec._create_product_from_design()
+            rec._assign_product_and_lot()
 
             # 2. Generar BOM
             bom = rec._generate_bom()
@@ -99,24 +104,26 @@ class EngineeringDesign(models.Model):
         for rec in self:
             rec.state = "approved"
 
-    def _create_product_from_design(self):
-        ProductTemplate = self.env["product.template"]
+    def _assign_product_and_lot(self):
+        StockLot = self.env["stock.lot"]
 
         for rec in self:
             if rec.product_id:
                 continue
 
-            name = f'{rec.family_id.name} Ø{rec.diameter}" L{rec.length}"'
+            template = rec.family_id.product_template_id
+            product = template.product_variant_id
 
-            template = ProductTemplate.create(
+            lot = StockLot.create(
                 {
-                    "name": name,
-                    "detailed_type": "product",
-                    "tracking": "lot",
+                    "name": rec.name,
+                    "product_id": product.id,
+                    "company_id": self.env.company.id,
                 }
             )
 
-            rec.product_id = template.product_variant_id.id
+            rec.product_id = product.id
+            rec.lot_id = lot.id
 
     def _generate_bom(self):
         self.ensure_one()
@@ -132,7 +139,8 @@ class EngineeringDesign(models.Model):
 
         bom = Bom.create(
             {
-                "product_tmpl_id": self.product_id.product_tmpl_id.id,
+                "product_tmpl_id": self.product_id.product_tmpl_id.id,  # OBLIGATORIO
+                "product_id": self.product_id.id,  # BOM específica del diseño
                 "product_qty": 1,
                 "type": "normal",
             }
@@ -154,23 +162,18 @@ class EngineeringDesign(models.Model):
 
         Production = self.env["mrp.production"]
 
-        if not bom:
-            raise UserError("No BOM provided")
-
         production = Production.create(
             {
                 "product_id": self.product_id.id,
                 "product_qty": 1,
                 "bom_id": bom.id,
-                "origin": self.sale_order_id.name,  # 🔥 mejor que self.name
+                "origin": self.sale_order_id.name,
                 "engineering_design_id": self.id,
-                "sale_order_id": self.sale_order_id.id,
+                "lot_producing_ids": [(6, 0, [self.lot_id.id])],
             }
         )
 
         self.production_id = production.id
-
-        return production
 
     def _validate_before_release(self):
         if not self.family_id:
