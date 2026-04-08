@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <!-- Vista lista EBOM -->
     <record id="view_engineering_bom_line_tree" model="ir.ui.view">
         <field name="name">engineering.bom.line.tree</field>

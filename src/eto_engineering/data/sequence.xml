@@ -1,0 +1,8 @@
+<odoo>
+    <record id="seq_engineering_design" model="ir.sequence">
+        <field name="name">Engineering Design</field>
+        <field name="code">engineering.design</field>
+        <field name="prefix">D-</field>
+        <field name="padding">4</field>
+    </record>
+</odoo>

@@ -12,7 +12,18 @@ class EngineeringDesign(models.Model):
     )
     lot_id = fields.Many2one("stock.lot", string="Generated Lot", readonly=True)
     production_id = fields.Many2one("mrp.production", string="Manufacturing Order")
-    sale_order_id = fields.Many2one("sale.order", string="Sales Order", required=True)
+
+    sale_order_line_id = fields.Many2one(
+        "sale.order.line", string="Sales Order Line", required=True
+    )
+
+    sale_order_id = fields.Many2one(
+        "sale.order",
+        related="sale_order_line_id.order_id",
+        string="Sales Order",
+        store=True,
+    )
+
     family_id = fields.Many2one(
         "engineering.family", string="Product Family", required=True
     )
@@ -54,6 +65,14 @@ class EngineeringDesign(models.Model):
         ],
         default="draft",
     )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get("name", "New") == "New":
+                seq = self.env["ir.sequence"].next_by_code("engineering.design")
+                vals["name"] = seq or "New"
+        return super().create(vals_list)
 
     def action_view_sale_order(self):
         self.ensure_one()

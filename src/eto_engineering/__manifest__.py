@@ -9,6 +9,7 @@ Handles engineering design linked to sales orders
     "author": "Your Company",
     "depends": ["sale", "mrp", "stock"],
     "data": [
+        "data/sequence.xml",
         "security/ir.model.access.csv",
         "security/security.xml",
         "views/engineering_family_views.xml",
